@@ -1,10 +1,12 @@
 from fastapi import APIRouter
+from services.nasa import fetch_feed_range
 
 router = APIRouter()
 
 @router.get("/feed")
 async def get_feed(start_date: str, end_date: str, hazardous: bool = None, sort_by: str = "distance"):
-    return {"message": "feed ok"}
+    data = await fetch_feed_range(start_date, end_date)
+    return data
 
 @router.get("/stats")
 async def get_stats(start_date: str, end_date: str):
