@@ -47,3 +47,19 @@ async def fetch_feed_range(start_date: str, end_date: str):
         result.update(chunk["near_earth_objects"])
         
     return result
+
+async def fetch_neo(neo_id: str): 
+    cache_key = f"neo_{neo_id}"
+    
+    if cache_key in cache:
+        return cache[cache_key]
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{NASA_BASE_URL}/neo/{neo_id}",
+            params={"api_key": NASA_API_KEY}
+        )
+        data = response.json()
+    
+    cache[cache_key] = data
+    return data
