@@ -4,7 +4,7 @@ from services.nasa import fetch_feed_range, fetch_neo
 router = APIRouter()
 
 @router.get("/feed")
-async def get_feed(start_date: str, end_date: str, hazardous: bool = None, sort_by: str = "distance"):
+async def get_feed(start_date: str, end_date: str, is_hazardous: bool = None, sort_by: str = "distance"):
     data = await fetch_feed_range(start_date, end_date)
     asteroids = []
     
@@ -20,10 +20,13 @@ async def get_feed(start_date: str, end_date: str, hazardous: bool = None, sort_
     asteroids = list(unique_asteroids.values())
 
     # Filtra per pericolosità se specificato
-    if hazardous is not None:
-        asteroids = [a for a in asteroids if a["is_potentially_hazardous_asteroid"] == hazardous]
+    if is_hazardous is not None:
+        asteroids = [a for a in asteroids if a["is_potentially_hazardous_asteroid"] == is_hazardous]
 
-    asteroids = sorted(asteroids, key=lambda a: float(a["close_approach_data"][0]["miss_distance"]["kilometers"]))
+    if sort_by == "distance":
+        asteroids = sorted(asteroids, key=lambda a: float(a["close_approach_data"][0]["miss_distance"]["kilometers"]))
+    elif sort_by == "velocity":
+        asteroids = sorted(asteroids, key=lambda a: float(a["close_approach_data"][0]["relative_velocity"]["kilometers_per_hour"]))
 
     return {"asteroids": asteroids}
 
