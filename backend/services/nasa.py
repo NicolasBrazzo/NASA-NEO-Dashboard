@@ -16,7 +16,7 @@ async def fetch_feed(start_date: str, end_date: str):
     if cache_key in cache:
         return cache[cache_key]
     
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         response = await client.get(
             f"{NASA_BASE_URL}/feed",
             params={

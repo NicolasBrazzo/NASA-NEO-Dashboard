@@ -25,22 +25,31 @@ export const AsteroidsList = ({ asteroids }) => {
     startDate: dates.startDate,
     endDate: dates.endDate,
   });
-
-  console.log(data);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchAsteroids = async () => {
-    let url = `http://localhost:8000/neo/feed?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`;
-    if (isHazardous !== null) {
-      url += `&is_hazardous=${isHazardous}`;
-    }
-    if (sortBy !== null) {
-      url += `&sort_by=${sortBy}`;
-    }
+    setLoading(true);
+    setError(null);
+    try {
+      let url = `http://localhost:8000/neo/feed?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`;
+      if (isHazardous !== null) {
+        url += `&is_hazardous=${isHazardous}`;
+      }
+      if (sortBy !== null) {
+        url += `&sort_by=${sortBy}`;
+      }
 
-    console.log(url);
-    const response = await fetch(url);
-    const result = await response.json();
-    setData(result.asteroids);
+      console.log(url);
+      const response = await fetch(url);
+      const result = await response.json();
+      setData(result.asteroids);
+    } catch (err) {
+      setError("Errore nel caricamento degli asteroidi.");
+      return;
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -72,7 +81,11 @@ export const AsteroidsList = ({ asteroids }) => {
         <p>Sort By:</p>
         <Select
           onValueChange={(value) =>
-            setSortBy(value === "distance" ? "distance" : value === "velocity" ? "velocity" : null)
+            setSortBy(
+              value === "distance" ? "distance"
+              : value === "velocity" ? "velocity"
+              : null,
+            )
           }
         >
           <SelectTrigger>
@@ -85,40 +98,69 @@ export const AsteroidsList = ({ asteroids }) => {
         </Select>
       </div>
       <div>
-        {data.map((asteroid) => (
-          <div key={asteroid.id}>
-            <Link href={`/asteroids/${asteroid.id}`}>
-              <h3>{asteroid.name}</h3>
-            </Link>
-            {asteroid.is_potentially_hazardous_asteroid ?
-              <p className="text-red-500">Potentially Hazardous</p>
-            : <p className="text-green-500">Not Potentially Hazardous</p>}
-            <p>
-              Close Approach Data:{" "}
-              {asteroid.close_approach_data[0]?.close_approach_date}
-            </p>
-            <p>
-              Miss Distance:{" "}
-              {formatDistance(
-                asteroid.close_approach_data[0]?.miss_distance.kilometers,
-              )}
-            </p>
-            <p>
-              Relative Velocity:{" "}
-              {formatSpeed(
-                asteroid.close_approach_data[0]?.relative_velocity
-                  .kilometers_per_hour,
-              )}
-            </p>
-            <p>
-              Diameter:{" "}
-              {formatDiameter(
-                asteroid.estimated_diameter.kilometers.estimated_diameter_min,
-                asteroid.estimated_diameter.kilometers.estimated_diameter_max,
-              )}
-            </p>
+        <p>Filter by Date:</p>
+        <input
+          type="date"
+          value={dateFilter.startDate}
+          onChange={(e) =>
+            setDateFilter((prev) => ({ ...prev, startDate: e.target.value }))
+          }
+        />
+        <input
+          type="date"
+          value={dateFilter.endDate}
+          onChange={(e) =>
+            setDateFilter((prev) => ({ ...prev, endDate: e.target.value }))
+          }
+        />
+      </div>
+      <div>
+        {error ?
+          <p className="text-red-500">{error}</p>
+        : loading ?
+          <p>Loading...</p>
+        : <div>
+            {data.length === 0 ?
+              <p>Nessun asteroide trovato per questo periodo.</p>
+            : data.map((asteroid) => (
+                <div key={asteroid.id}>
+                  <Link href={`/asteroids/${asteroid.id}`}>
+                    <h3>{asteroid.name}</h3>
+                  </Link>
+                  {asteroid.is_potentially_hazardous_asteroid ?
+                    <p className="text-red-500">Potentially Hazardous</p>
+                  : <p className="text-green-500">Not Potentially Hazardous</p>}
+                  <p>
+                    Close Approach Data:{" "}
+                    {asteroid.close_approach_data[0]?.close_approach_date}
+                  </p>
+                  <p>
+                    Miss Distance:{" "}
+                    {formatDistance(
+                      asteroid.close_approach_data[0]?.miss_distance.kilometers,
+                    )}
+                  </p>
+                  <p>
+                    Relative Velocity:{" "}
+                    {formatSpeed(
+                      asteroid.close_approach_data[0]?.relative_velocity
+                        .kilometers_per_hour,
+                    )}
+                  </p>
+                  <p>
+                    Diameter:{" "}
+                    {formatDiameter(
+                      asteroid.estimated_diameter.kilometers
+                        .estimated_diameter_min,
+                      asteroid.estimated_diameter.kilometers
+                        .estimated_diameter_max,
+                    )}
+                  </p>
+                </div>
+              ))
+            }
           </div>
-        ))}
+        }
       </div>
     </div>
   );
