@@ -25,3 +25,5 @@ export const getLastWeekRange = () => {
   const startDate = `${startDateObj.getFullYear()}-${String(startDateObj.getMonth() + 1).padStart(2, "0")}-${String(startDateObj.getDate()).padStart(2, "0")}`;
   return { startDate, endDate };
 };
+
+export const getToday = () => new Date().toISOString().split("T")[0];

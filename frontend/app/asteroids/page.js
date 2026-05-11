@@ -2,17 +2,19 @@ import { AsteroidsList } from "@/components/AsteroidsList";
 import { getLastWeekRange } from "@/lib/utils";
 
 export default async function Asteroids() {
-  const dates =  getLastWeekRange();
-
+  const dates = getLastWeekRange();
   const res = await fetch(
     `http://localhost:8000/neo/feed?start_date=${dates.startDate}&end_date=${dates.endDate}`,
   );
   const data = await res.json();
 
   return (
-    <div>
-      <h1>NASA NEO Dashboard</h1>
+    <main className="mx-auto max-w-7xl px-6 py-10 flex flex-col gap-10">
+      <div className="flex flex-col gap-1">
+        <h1>Esplora asteroidi</h1>
+        <p>Filtra, ordina e analizza gli oggetti in avvicinamento alla Terra.</p>
+      </div>
       <AsteroidsList asteroids={data.asteroids} />
-    </div>
-  )
+    </main>
+  );
 }
