@@ -70,7 +70,7 @@ export const StatsCharts = ({ stats }) => {
     setError(null);
     try {
       const res = await fetch(
-        `${process.env.VITE_SERVER_URL}/neo/stats?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`,
+        `${process.env.NEXT_PUBLIC_VITE_SERVER_URL}/neo/stats?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`,
       );
       const result = await res.json();
       setData(result);

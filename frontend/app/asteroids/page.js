@@ -3,8 +3,9 @@ import { getLastWeekRange } from "@/lib/utils";
 
 export default async function Asteroids() {
   const dates = getLastWeekRange();
+  const baseUrl = process.env.NEXT_PUBLIC_VITE_SERVER_URL; 
   const res = await fetch(
-    `${process.env.VITE_SERVER_URL}/neo/feed?start_date=${dates.startDate}&end_date=${dates.endDate}`,
+    `${baseUrl}/neo/feed?start_date=${dates.startDate}&end_date=${dates.endDate}`,
   );
   const data = await res.json();
 

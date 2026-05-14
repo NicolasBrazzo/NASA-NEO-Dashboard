@@ -17,7 +17,7 @@ export default async function Dashboard() {
   let fetchError = null;
   try {
     const res = await fetch(
-      `${process.env.VITE_SERVER_URL}/neo/feed?start_date=${dates.startDate}&end_date=${dates.endDate}`,
+      `${process.env.NEXT_PUBLIC_VITE_SERVER_URL}/neo/feed?start_date=${dates.startDate}&end_date=${dates.endDate}`,
       { cache: "no-store" },
     );
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -36,7 +36,7 @@ export default async function Dashboard() {
         <p className="text-lede mt-6">
           Non sono riuscito a contattare il backend. Verifica che il server
           FastAPI sia in esecuzione su{" "}
-          <code className="font-mono text-foreground">{process.env.VITE_SERVER_URL?.replace('http://', '') || 'localhost:8000'}</code>,
+          <code className="font-mono text-foreground">{process.env.NEXT_PUBLIC_VITE_SERVER_URL?.replace('http://', '') || 'localhost:8000'}</code>,
           oppure riprova tra qualche istante.
         </p>
         <p className="text-meta mt-8">Dettaglio tecnico · {fetchError}</p>

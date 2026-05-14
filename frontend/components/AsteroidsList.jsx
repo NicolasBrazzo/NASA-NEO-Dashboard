@@ -42,7 +42,7 @@ export const AsteroidsList = ({ asteroids }) => {
     setLoading(true);
     setError(null);
     try {
-      let url = `${process.env.VITE_SERVER_URL}/neo/feed?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`;
+      let url = `${process.env.NEXT_PUBLIC_VITE_SERVER_URL}/neo/feed?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`;
       if (isHazardous !== null) url += `&is_hazardous=${isHazardous}`;
       if (sortBy !== null) url += `&sort_by=${sortBy}`;
 

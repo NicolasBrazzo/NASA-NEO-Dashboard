@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 export const AsteroidRadar = ({ asteroids, startDate, endDate }) => {
     // Scala: 1 LD = 4.6 unità SVG (230px / 50 LD)
@@ -21,15 +21,6 @@ export const AsteroidRadar = ({ asteroids, startDate, endDate }) => {
         
         return 25;
     };
-
-    useEffect(() => {
-    console.log("Totale asteroidi:", asteroids.length);
-    const outOfRange = asteroids.filter(a => {
-        const d = parseFloat(a.close_approach_data?.[0]?.miss_distance?.lunar || 0);
-        return d > 50;
-    });
-    console.log("Fuori range (>50 LD):", outOfRange.length, outOfRange.map(a => a.name));
-}, [asteroids]);
 
     // Genera angolo deterministico dall'ID per posizionamento coerente
     const getAngle = (asteroid, index) => {
