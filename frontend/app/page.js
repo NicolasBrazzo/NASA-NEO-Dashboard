@@ -8,6 +8,7 @@ import {
   lunarDistanceLabel,
 } from "@/lib/utils";
 import { TemporalSkyline } from "@/components/TemporalSkyline";
+import { AsteroidRadar } from "@/components/AsteroidRadar";
 
 export default async function Dashboard() {
   const dates = getLastWeekRange();
@@ -137,11 +138,12 @@ export default async function Dashboard() {
           </p>
         </div>
         <div className="pt-12">
-          <TemporalSkyline
+          {/* <TemporalSkyline
             asteroids={asteroids}
             startDate={dates.startDate}
             endDate={dates.endDate}
-          />
+          /> */}
+          <AsteroidRadar asteroids={asteroids} startDate={dates.startDate} endDate={dates.endDate} />
         </div>
       </section>
 

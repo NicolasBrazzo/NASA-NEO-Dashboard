@@ -269,3 +269,7 @@
 .font-serif {
   font-family: var(--font-serif);
 }
+
+@keyframes orbit {
+  to { transform: rotate(360deg); }
+}
