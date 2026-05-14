@@ -4,7 +4,7 @@ import { getLastWeekRange } from "@/lib/utils";
 export default async function Stats() {
   const dates = getLastWeekRange();
   const res = await fetch(
-    `http://localhost:8000/neo/stats?start_date=${dates.startDate}&end_date=${dates.endDate}`,
+    `${process.env.VITE_SERVER_URL}/neo/stats?start_date=${dates.startDate}&end_date=${dates.endDate}`,
   );
   const data = await res.json();
 

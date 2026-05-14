@@ -11,7 +11,7 @@ import {
 
 export default async function Asteroid({ params }) {
   const { id } = await params;
-  const res = await fetch(`http://localhost:8000/neo/${id}`);
+  const res = await fetch(`${process.env.VITE_SERVER_URL}/neo/${id}`);
   const data = await res.json();
 
   const isHazardous = data.is_potentially_hazardous_asteroid;
