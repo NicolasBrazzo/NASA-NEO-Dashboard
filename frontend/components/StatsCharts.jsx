@@ -132,11 +132,11 @@ export const StatsCharts = ({ stats }) => {
         <div className="grid grid-cols-2 gap-6">
           <div className="rounded-lg border border-border bg-card p-6 flex flex-col gap-4">
             <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-[320px] w-full" />
+            <Skeleton className="h-80 w-full" />
           </div>
           <div className="rounded-lg border border-border bg-card p-6 flex flex-col gap-4">
             <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-[320px] w-full" />
+            <Skeleton className="h-80 w-full" />
           </div>
         </div>
       : <div className="grid grid-cols-2 gap-6">

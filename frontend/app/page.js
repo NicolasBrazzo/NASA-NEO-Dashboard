@@ -98,7 +98,7 @@ export default async function Dashboard() {
 
           <h1 className="max-w-[18ch]">
             Questa settimana,{" "}
-            <em className="text-primary not-italic font-normal italic">
+            <em className="text-primary not-italic font-normal">
               {total} {total === 1 ? "asteroide" : "asteroidi"}
             </em>{" "}
             {total === 1 ? "sfiorerà" : "sfioreranno"} la Terra.
@@ -165,7 +165,7 @@ export default async function Dashboard() {
               km
             </span>
           </div>
-          <p className="text-sm text-muted-foreground !leading-snug !mt-0">
+          <p className="text-sm text-muted-foreground leading-snug! mt-0!">
             <span className="text-primary font-medium">
               {lunarDistanceLabel(closestKm)}
             </span>
@@ -183,7 +183,7 @@ export default async function Dashboard() {
             <span className="text-meta">7 giorni</span>
           </div>
           <div className="text-data-lg">{total}</div>
-          <p className="text-sm text-muted-foreground !leading-snug !mt-0">
+          <p className="text-sm text-muted-foreground leading-snug! mt-0!">
             {hazardousCount > 0 ?
               <>
                 Di cui{" "}
@@ -211,7 +211,7 @@ export default async function Dashboard() {
             {largest.name.replace(/[()]/g, "")}
           </div>
           {largestSize && !largestSize.parts.fallback && (
-            <p className="text-sm font-mono !leading-snug !mt-0 flex items-baseline gap-1">
+            <p className="text-sm font-mono leading-snug! mt-0! flex items-baseline gap-1">
               {largestSize.parts.prefix && (
                 <span className="text-muted-foreground">
                   {largestSize.parts.prefix}
@@ -224,7 +224,7 @@ export default async function Dashboard() {
             </p>
           )}
           {largestSize?.parts.fallback && (
-            <p className="text-sm text-muted-foreground italic !leading-snug !mt-0">
+            <p className="text-sm text-muted-foreground italic leading-snug! mt-0!">
               {largestSize.parts.fallback}
             </p>
           )}

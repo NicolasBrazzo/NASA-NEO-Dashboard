@@ -40,7 +40,7 @@ export const AsteroidRadar = ({ asteroids, startDate, endDate }) => {
     const phaCount = processedAsteroids.filter(a => a.is_potentially_hazardous_asteroid).length;
 
     return (
-        <div className="relative w-full aspect-square max-w-[500px]">
+        <div className="relative w-full aspect-square max-w-125">
             <style>{`
                 @keyframes sweep {
                     from { transform: rotate(0deg); }

@@ -147,7 +147,7 @@ export const AsteroidsList = ({ asteroids }) => {
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">
-              <TableHead className="text-label font-medium w-[280px]">Nome</TableHead>
+              <TableHead className="text-label font-medium w-70">Nome</TableHead>
               <TableHead className="text-label font-medium">Data</TableHead>
               <TableHead className="text-label font-medium text-right">Distanza</TableHead>
               <TableHead className="text-label font-medium text-right">Velocità</TableHead>
