@@ -7,7 +7,7 @@ import {
   getLastWeekRange,
 } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -38,11 +38,13 @@ export const AsteroidsList = ({ asteroids }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const isFirstRender = useRef(true);
+
   const fetchAsteroids = async () => {
     setLoading(true);
     setError(null);
     try {
-      let url = `${process.env.NEXT_PUBLIC_VITE_SERVER_URL}/neo/feed?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`;
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/neo/feed?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`;
       if (isHazardous !== null) url += `&is_hazardous=${isHazardous}`;
       if (sortBy !== null) url += `&sort_by=${sortBy}`;
 
@@ -57,6 +59,11 @@ export const AsteroidsList = ({ asteroids }) => {
   };
 
   useEffect(() => {
+    // Skip del primo render: i dati iniziali vengono dalla server page
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (dateFilter.startDate && dateFilter.endDate) {
       fetchAsteroids();
     }
@@ -64,10 +71,8 @@ export const AsteroidsList = ({ asteroids }) => {
 
   return (
     <div className="flex flex-col gap-7">
-
       {/* Filtri */}
       <div className="flex flex-wrap items-end gap-4 rounded-lg border border-border bg-card p-4">
-
         {/* Date */}
         <div className="flex flex-col gap-1.5">
           <span className="text-label">Dal</span>
@@ -147,33 +152,55 @@ export const AsteroidsList = ({ asteroids }) => {
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">
-              <TableHead className="text-label font-medium w-70">Nome</TableHead>
+              <TableHead className="text-label font-medium w-70">
+                Nome
+              </TableHead>
               <TableHead className="text-label font-medium">Data</TableHead>
-              <TableHead className="text-label font-medium text-right">Distanza</TableHead>
-              <TableHead className="text-label font-medium text-right">Velocità</TableHead>
-              <TableHead className="text-label font-medium text-right">Diametro</TableHead>
-              <TableHead className="text-label font-medium text-center">Stato</TableHead>
+              <TableHead className="text-label font-medium text-right">
+                Distanza
+              </TableHead>
+              <TableHead className="text-label font-medium text-right">
+                Velocità
+              </TableHead>
+              <TableHead className="text-label font-medium text-right">
+                Diametro
+              </TableHead>
+              <TableHead className="text-label font-medium text-center">
+                Stato
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {error ? (
+            {error ?
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-12">
                   <span className="text-sm text-destructive">{error}</span>
                 </TableCell>
               </TableRow>
-            ) : loading ? (
+            : loading ?
               Array.from({ length: 8 }).map((_, i) => (
                 <TableRow key={i} className="border-border">
-                  <TableCell><Skeleton className="h-4 w-48" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-28 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-28 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-48" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16 mx-auto" />
+                  </TableCell>
                 </TableRow>
               ))
-            ) : data.length === 0 ? (
+            : data.length === 0 ?
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-12">
                   <span className="text-sm text-muted-foreground">
@@ -181,8 +208,7 @@ export const AsteroidsList = ({ asteroids }) => {
                   </span>
                 </TableCell>
               </TableRow>
-            ) : (
-              data.map((asteroid) => {
+            : data.map((asteroid) => {
                 const approach = asteroid.close_approach_data[0];
                 const isHaz = asteroid.is_potentially_hazardous_asteroid;
                 return (
@@ -210,23 +236,27 @@ export const AsteroidsList = ({ asteroids }) => {
                     </TableCell>
                     <TableCell className="text-right">
                       <span className="text-data">
-                        {formatSpeed(approach?.relative_velocity.kilometers_per_hour)}
+                        {formatSpeed(
+                          approach?.relative_velocity.kilometers_per_hour,
+                        )}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
                       <span className="text-data">
                         {formatDiameter(
-                          asteroid.estimated_diameter.kilometers.estimated_diameter_min,
-                          asteroid.estimated_diameter.kilometers.estimated_diameter_max,
+                          asteroid.estimated_diameter.kilometers
+                            .estimated_diameter_min,
+                          asteroid.estimated_diameter.kilometers
+                            .estimated_diameter_max,
                         )}
                       </span>
                     </TableCell>
                     <TableCell className="text-center">
                       <span
                         className={`text-xs font-mono px-2 py-0.5 rounded-full border ${
-                          isHaz
-                            ? "border-primary/40 text-primary bg-amber-muted"
-                            : "border-border text-muted-foreground"
+                          isHaz ?
+                            "border-primary/40 text-primary bg-amber-muted"
+                          : "border-border text-muted-foreground"
                         }`}
                       >
                         {isHaz ? "Pericoloso" : "Sicuro"}
@@ -235,11 +265,10 @@ export const AsteroidsList = ({ asteroids }) => {
                   </TableRow>
                 );
               })
-            )}
+            }
           </TableBody>
         </Table>
       </div>
-
     </div>
   );
 };

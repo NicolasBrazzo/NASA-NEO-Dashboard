@@ -3,7 +3,7 @@ import { getLastWeekRange } from "@/lib/utils";
 
 export default async function Stats() {
   const dates = getLastWeekRange();
-  const baseUrl = process.env.NEXT_PUBLIC_VITE_SERVER_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const res = await fetch(
     `${baseUrl}/neo/stats?start_date=${dates.startDate}&end_date=${dates.endDate}`,
   );
