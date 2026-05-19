@@ -107,7 +107,7 @@ export default async function AsteroidDetail({ params }) {
   // -------- Stato 404 --------
   if (fetchError === "not_found") {
     return (
-      <main className="mx-auto max-w-7xl px-8 py-20">
+      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
         <Link
           href="/asteroids"
           className="text-eyebrow no-underline hover:text-foreground transition-colors mb-12 block w-fit"
@@ -129,7 +129,7 @@ export default async function AsteroidDetail({ params }) {
   // -------- Stato errore --------
   if (fetchError) {
     return (
-      <main className="mx-auto max-w-7xl px-8 py-20">
+      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
         <Link
           href="/asteroids"
           className="text-eyebrow no-underline hover:text-foreground transition-colors mb-12 block w-fit"
@@ -184,7 +184,7 @@ export default async function AsteroidDetail({ params }) {
   const periodYears = (parseFloat(orbital.orbital_period) / 365.25).toFixed(2);
 
   return (
-    <main className="mx-auto max-w-7xl px-8 py-16 flex flex-col gap-20">
+    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       {/* ===== BREADCRUMB ===== */}
       <Link
         href="/asteroids"
@@ -237,7 +237,7 @@ export default async function AsteroidDetail({ params }) {
       </section>
 
       {/* ===== KPI STRIP — 4 metriche chiave ===== */}
-      <section className="grid grid-cols-4 gap-px bg-border border border-border">
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
         {/* KPI 1: Distanza minima storica */}
         <article className="bg-card px-6 py-6 flex flex-col gap-2">
           <div className="flex items-baseline justify-between">
@@ -342,7 +342,7 @@ export default async function AsteroidDetail({ params }) {
       {/* ===== DATI ORBITALI ===== */}
       <section className="flex flex-col gap-8">
         <h2>Dati orbitali</h2>
-        <div className="grid grid-cols-2 gap-px bg-border border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
           {/* Colonna sinistra */}
           <div className="bg-card px-8 py-6 flex flex-col gap-6">
             <div className="flex flex-col gap-1">
@@ -429,11 +429,11 @@ export default async function AsteroidDetail({ params }) {
       {/* ===== RADAR AVVICINAMENTI ===== */}
       <section className="flex flex-col gap-8">
         <h2>Storico avvicinamenti alla Terra</h2>
-        <div className="flex gap-16 items-start">
-          <div className="w-[500px] shrink-0">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
+          <div className="w-full lg:w-[500px] lg:shrink-0">
             <ApproachRadar approaches={allEarthApproaches} />
           </div>
-          <div className="w-[280px] shrink-0 flex flex-col gap-2 pt-4">
+          <div className="w-full lg:w-[280px] lg:shrink-0 flex flex-col gap-2 pt-4">
             <p className="text-eyebrow">Lettura del grafico</p>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">

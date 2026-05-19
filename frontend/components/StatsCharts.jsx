@@ -148,7 +148,7 @@ export const StatsCharts = () => {
 
       {/* KPI Strip */}
       {kpis ?
-        <section className="grid grid-cols-4 gap-px bg-border border border-border">
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
           {/* KPI 1: Totale asteroidi */}
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
             <span className="text-label">Totale asteroidi</span>
@@ -213,7 +213,7 @@ export const StatsCharts = () => {
           <span className="text-sm text-destructive">{error}</span>
         </div>
       : loading ?
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="border border-border bg-card p-8 flex flex-col gap-6">
             <Skeleton className="h-4 w-40" />
             <Skeleton className="h-80 w-full" />

@@ -3,7 +3,7 @@ import { StatsCharts } from "@/components/StatsCharts";
 export default function Stats() {
   
   return (
-    <main className="mx-auto max-w-7xl px-8 py-16 flex flex-col gap-20">
+    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       <div className="flex flex-col gap-3">
         <p className="text-eyebrow">DATI AGGREGATI · NEAR-EARTH OBJECTS</p>
         <h1>Statistiche</h1>

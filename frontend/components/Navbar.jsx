@@ -14,7 +14,7 @@ export const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-8">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-8">
 
         {/* === LOGO ===
             Pallino ambra + "NEO" in serif + separatore + sottotitolo mono.
@@ -40,7 +40,7 @@ export const Navbar = () => {
             sotto la pagina attiva. La linea è posizionata a -1px dal bottom
             del link, così si sovrappone al border-b della header e crea
             l'effetto "tab fusa con la barra". */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 sm:gap-8">
           {links.map(({ href, label }) => {
             const isActive = pathname === href;
             return (

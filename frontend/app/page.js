@@ -30,7 +30,7 @@ export default async function Dashboard() {
   // -------- Stato di errore --------
   if (fetchError) {
     return (
-      <main className="mx-auto max-w-7xl px-8 py-20">
+      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
         <p className="text-eyebrow mb-6">Bollettino · Errore di connessione</p>
         <h1>Il servizio non è raggiungibile.</h1>
         <p className="text-lede mt-6">
@@ -47,7 +47,7 @@ export default async function Dashboard() {
   // -------- Stato vuoto --------
   if (asteroids.length === 0) {
     return (
-      <main className="mx-auto max-w-7xl px-8 py-20">
+      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
         <p className="text-eyebrow mb-6">
           Bollettino · {formatDateRange(dates.startDate, dates.endDate)}
         </p>
@@ -87,9 +87,9 @@ export default async function Dashboard() {
   const largestSize = compareSize(largestDiameterMeters, largest.id);
 
   return (
-    <main className="mx-auto max-w-7xl px-8 py-16 flex flex-col gap-20">
+    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       {/* ===== HERO ===== */}
-      <section className="grid grid-cols-[1.1fr_1fr] gap-12 items-start">
+      <section className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-start">
         <div className="flex flex-col gap-8">
           <p className="text-eyebrow">
             Bollettino · {formatDateRange(dates.startDate, dates.endDate)} ·
@@ -148,7 +148,7 @@ export default async function Dashboard() {
       </section>
 
       {/* ===== KPI ===== */}
-      <section className="grid grid-cols-3 gap-px bg-border border border-border">
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border">
         {/* KPI 1: Asteroide più vicino */}
         <article className="bg-card px-8 py-7 flex flex-col gap-2">
           <div className="flex items-baseline justify-between">
@@ -246,7 +246,7 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {asteroids.slice(0, 3).map((asteroid) => (
             <AsteroidsCardDashboard key={asteroid.id} asteroid={asteroid} />
           ))}
