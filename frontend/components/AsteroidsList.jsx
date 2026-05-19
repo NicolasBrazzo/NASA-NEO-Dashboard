@@ -67,47 +67,49 @@ export const AsteroidsList = ({ asteroids }) => {
     if (dateFilter.startDate && dateFilter.endDate) {
       fetchAsteroids();
     }
-  }, [isHazardous, sortBy, dateFilter]);
+  }, [isHazardous, sortBy, dateFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="flex flex-col gap-7">
-      {/* Filtri */}
-      <div className="flex flex-wrap items-end gap-4 rounded-lg border border-border bg-card p-4">
+    <div className="flex flex-col gap-8">
+      {/* Filtri — barra contestuale sobria */}
+      <div className="flex flex-wrap items-end gap-8 border-b border-border pb-6">
         {/* Date */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-label">Dal</span>
+          <span className="text-eyebrow">Dal</span>
           <input
             type="date"
             value={dateFilter.startDate}
             onChange={(e) =>
               setDateFilter((prev) => ({ ...prev, startDate: e.target.value }))
             }
-            className="h-9 rounded-md border border-input bg-transparent px-3 text-sm text-foreground font-mono
-                       focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
+            className="h-8 bg-transparent text-sm text-foreground font-mono
+                       border-0 border-b border-border focus:outline-none
+                       focus:border-foreground transition-colors"
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <span className="text-label">Al</span>
+          <span className="text-eyebrow">Al</span>
           <input
             type="date"
             value={dateFilter.endDate}
             onChange={(e) =>
               setDateFilter((prev) => ({ ...prev, endDate: e.target.value }))
             }
-            className="h-9 rounded-md border border-input bg-transparent px-3 text-sm text-foreground font-mono
-                       focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
+            className="h-8 bg-transparent text-sm text-foreground font-mono
+                       border-0 border-b border-border focus:outline-none
+                       focus:border-foreground transition-colors"
           />
         </div>
 
         {/* Pericolosità */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-label">Pericolosità</span>
+          <span className="text-eyebrow">Pericolosità</span>
           <Select
             onValueChange={(value) =>
               setIsHazardous(value === "all" ? null : value === "hazardous")
             }
           >
-            <SelectTrigger className="w-40 h-9 text-sm">
+            <SelectTrigger className="w-40 h-8 text-sm border-0 border-b border-border rounded-none bg-transparent px-2 focus:ring-0">
               <SelectValue placeholder="Tutti" />
             </SelectTrigger>
             <SelectContent>
@@ -120,13 +122,13 @@ export const AsteroidsList = ({ asteroids }) => {
 
         {/* Ordinamento */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-label">Ordina per</span>
+          <span className="text-eyebrow">Ordina per</span>
           <Select
             onValueChange={(value) =>
               setSortBy(value === "none" ? null : value)
             }
           >
-            <SelectTrigger className="w-36 h-9 text-sm">
+            <SelectTrigger className="w-36 h-8 text-sm border-0 border-b border-border rounded-none bg-transparent px-2 focus:ring-0">
               <SelectValue placeholder="Default" />
             </SelectTrigger>
             <SelectContent>
@@ -139,16 +141,17 @@ export const AsteroidsList = ({ asteroids }) => {
 
         {/* Conteggio risultati */}
         {!loading && !error && (
-          <div className="ml-auto flex flex-col justify-end">
-            <span className="text-label">
-              {data.length} risultat{data.length === 1 ? "o" : "i"}
+          <div className="ml-auto flex flex-col gap-1.5">
+            <span className="text-eyebrow">Risultati</span>
+            <span className="font-mono text-sm text-foreground">
+              {data.length} oggett{data.length === 1 ? "o" : "i"}
             </span>
           </div>
         )}
       </div>
 
-      {/* Tabella */}
-      <div className="rounded-lg border border-border overflow-hidden">
+      {/* Tabella squadrata, in linea con il resto */}
+      <div className="border border-border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">
@@ -253,7 +256,7 @@ export const AsteroidsList = ({ asteroids }) => {
                     </TableCell>
                     <TableCell className="text-center">
                       <span
-                        className={`text-xs font-mono px-2 py-0.5 rounded-full border ${
+                        className={`font-mono text-[11px] uppercase tracking-widest px-2.5 py-1 border rounded-xs ${
                           isHaz ?
                             "border-primary/40 text-primary bg-amber-muted"
                           : "border-border text-muted-foreground"
