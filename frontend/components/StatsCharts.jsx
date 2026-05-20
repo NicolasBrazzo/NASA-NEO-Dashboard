@@ -223,9 +223,9 @@ export const StatsCharts = () => {
             <Skeleton className="h-80 w-full" />
           </div>
         </div>
-      : <div className="grid grid-cols-2 gap-6">
+      : <div className="flex flex-col gap-6 md:flex-row">
           {/* Scatter — distanza nel tempo */}
-          <div className="border border-border bg-card p-8 flex flex-col gap-6">
+          <div className="border border-border bg-card p-8 flex flex-col gap-6 flex-1">
             <div className="flex flex-col gap-2">
               <span className="text-eyebrow">Grafico 01</span>
               <h3 className="text-2xl">Distanza nel tempo</h3>
@@ -279,7 +279,7 @@ export const StatsCharts = () => {
           </div>
 
           {/* Pie — distribuzione dimensioni */}
-          <div className="border border-border bg-card p-8 flex flex-col gap-6">
+          <div className="border border-border bg-card p-8 flex flex-col gap-6 flex-1">
             <div className="flex flex-col gap-2">
               <span className="text-eyebrow">Grafico 02</span>
               <h3 className="text-2xl">Distribuzione dimensioni</h3>

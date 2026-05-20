@@ -233,12 +233,12 @@ export default async function Dashboard() {
 
       {/* ===== SECTION: I più vicini ===== */}
       <section className="flex flex-col gap-8">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <h2 className="max-w-[20ch]">
             In avvicinamento.
             <br />I prossimi sette giorni.
           </h2>
-          <div className="text-meta text-right">
+          <div className="text-meta">
             <span className="block text-foreground font-mono text-sm normal-case tracking-normal mb-1">
               {total} {total === 1 ? "oggetto tracciato" : "oggetti tracciati"}
             </span>
