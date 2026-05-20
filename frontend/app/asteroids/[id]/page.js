@@ -195,45 +195,62 @@ export default async function AsteroidDetail({ params }) {
 
       {/* ===== HERO ===== */}
       <section className="flex flex-col gap-8">
-        {/* Eyebrow */}
-        <div className="flex items-center gap-4">
-          <p className="text-eyebrow">
-            {data.designation}
-            {orbitClass?.orbit_class_type && (
-              <> · Classe {orbitClass.orbit_class_type}</>
-            )}
-            {" · "}Spk-id {data.neo_reference_id}
-          </p>
-        </div>
+        {/* Due colonne */}
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-center">
+          {/* Colonna sinistra: titolo, lede, badge, link */}
+          <div className="flex flex-col gap-6 flex-1">
+            {/* Eyebrow */}
+            <p className="text-eyebrow">
+              {data.designation}
+              {orbitClass?.orbit_class_type && (
+                <> · Classe {orbitClass.orbit_class_type}</>
+              )}
+              {" · "}Spk-id {data.neo_reference_id}
+            </p>
+            <h1>{name}</h1>
+            <p className="text-lede">{lede}</p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span
+                className={`font-mono text-[11px] uppercase tracking-widest px-3 py-1.5 border rounded-xs ${
+                  isPHA ?
+                    "border-primary/40 text-primary bg-amber-muted"
+                  : "border-border text-muted-foreground"
+                }`}
+              >
+                {isPHA ? "Pericoloso" : "Sicuro"}
+              </span>
+              <a
+                href={data.nasa_jpl_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground
+                           hover:text-foreground border border-border hover:border-border-strong
+                           rounded-xs px-3 py-1.5 transition-colors no-underline"
+              >
+                NASA JPL ↗
+              </a>
+            </div>
+          </div>
 
-        {/* Titolo + chip + link JPL */}
-        <div className="flex items-start justify-between gap-8">
-          <h1 className="max-w-[20ch]">{name}</h1>
-          <div className="flex items-center gap-3 shrink-0 pt-4">
-            <span
-              className={`font-mono text-[11px] uppercase tracking-widest px-3 py-1.5 border rounded-xs ${
-                isPHA ?
-                  "border-primary/40 text-primary bg-amber-muted"
-                : "border-border text-muted-foreground"
-              }`}
-            >
-              {isPHA ? "Pericoloso" : "Sicuro"}
-            </span>
-            <a
-              href={data.nasa_jpl_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground
-                         hover:text-foreground border border-border hover:border-border-strong
-                         rounded-xs px-3 py-1.5 transition-colors no-underline"
-            >
-              NASA JPL
-            </a>
+          {/* Colonna destra: radar + legenda compatta */}
+          <div className="flex flex-col gap-4 flex-1">
+            <ApproachRadar approaches={allEarthApproaches} />
+            <div className="flex flex-wrap justify-center border border-border py-3 gap-x-6 gap-y-2 px-1">
+              <span className="font-mono text-[11px] text-primary flex items-center gap-1.5">
+                ● Prossimo passaggio
+              </span>
+              <span
+                className="font-mono text-[11px] flex items-center gap-1.5"
+                style={{ color: "var(--chart-3)" }}
+              >
+                ● Storici
+              </span>
+              <span className="font-mono text-[11px] text-muted-foreground flex items-center gap-1.5">
+                ● Futuri previsti
+              </span>
+            </div>
           </div>
         </div>
-
-        {/* Lede */}
-        <p className="text-lede">{lede}</p>
       </section>
 
       {/* ===== KPI STRIP — 4 metriche chiave ===== */}
@@ -422,59 +439,6 @@ export default async function AsteroidDetail({ params }) {
                 </span>
               </div>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== RADAR AVVICINAMENTI ===== */}
-      <section className="flex flex-col gap-8">
-        <h2>Storico avvicinamenti alla Terra</h2>
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
-          <div className="w-full lg:w-[500px] lg:shrink-0">
-            <ApproachRadar approaches={allEarthApproaches} />
-          </div>
-          <div className="w-full lg:w-[280px] lg:shrink-0 flex flex-col gap-2 pt-4">
-            <p className="text-eyebrow">Lettura del grafico</p>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="font-mono text-xs text-primary">
-                  ● Prossimo passaggio
-                </span>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Il punto ambra indica il prossimo avvicinamento previsto alla
-                  Terra. La data è riportata accanto al punto.
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 border-t border-border pt-4">
-                <span
-                  className="font-mono text-xs"
-                  style={{ color: "var(--chart-3)" }}
-                >
-                  ● Passaggi storici
-                </span>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  I punti blu rappresentano gli avvicinamenti già avvenuti,
-                  registrati dalla NASA dal primo avvistamento dell'asteroide.
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 border-t border-border pt-4">
-                <span className="font-mono text-xs text-muted-foreground">
-                  ● Passaggi futuri
-                </span>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  I punti grigi sono avvicinamenti futuri previsti oltre il
-                  prossimo, calcolati dal modello orbitale NASA.
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 border-t border-border pt-4">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  La scala radiale è adattata ai dati di questo asteroide: il
-                  cerchio interno e quello esterno corrispondono rispettivamente
-                  alla distanza minima e massima registrata nei suoi
-                  avvicinamenti.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
