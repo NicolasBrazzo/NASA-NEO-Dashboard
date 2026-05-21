@@ -90,23 +90,28 @@ export default async function AsteroidDetail({ params }) {
   // Fetch con gestione errori
   let data = null;
   let fetchError = null;
+  let errorStatus = null;
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/neo/${id}`, {
       cache: "no-store",
     });
-    if (res.status === 404) {
-      fetchError = "not_found";
-    } else if (!res.ok) {
-      fetchError = `HTTP ${res.status}`;
-    } else {
+    if (res.ok) {
       data = await res.json();
+    } else {
+      errorStatus = res.status;
+      try {
+        const body = await res.json();
+        fetchError = body.detail ?? `HTTP ${res.status}`;
+      } catch {
+        fetchError = `HTTP ${res.status}`;
+      }
     }
   } catch (err) {
     fetchError = err.message;
   }
 
   // -------- Stato 404 --------
-  if (fetchError === "not_found") {
+  if (errorStatus === 404) {
     return (
       <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
         <Link
@@ -127,8 +132,9 @@ export default async function AsteroidDetail({ params }) {
     );
   }
 
-  // -------- Stato errore --------
+  // -------- Stato 429 / errore generico --------
   if (fetchError) {
+    const isRateLimit = errorStatus === 429;
     return (
       <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
         <Link
@@ -137,13 +143,11 @@ export default async function AsteroidDetail({ params }) {
         >
           Esplora asteroidi
         </Link>
-        <p className="text-eyebrow mb-6">Errore di connessione</p>
-        <h1>Il servizio non è raggiungibile.</h1>
-        <p className="text-lede mt-6">
-          Non riesco a recuperare i dati di questo asteroide. Riprova tra
-          qualche istante.
+        <p className="text-eyebrow mb-6">
+          {isRateLimit ? "Rate limit" : "Errore di connessione"}
         </p>
-        <p className="text-meta mt-8">Dettaglio tecnico · {fetchError}</p>
+        <h1>{isRateLimit ? "Limite API raggiunto." : "Il servizio non è raggiungibile."}</h1>
+        <p className="text-lede mt-6">{fetchError}</p>
       </main>
     );
   }

@@ -103,6 +103,30 @@ export const getLastWeekRange = () => {
 // Oggi in formato YYYY-MM-DD
 export const getToday = () => new Date().toISOString().split("T")[0];
 
+// -----------------------------------------------------------------------------
+// API ERROR PARSING
+// -----------------------------------------------------------------------------
+
+// Legge una risposta HTTP non-ok e restituisce { message, status }.
+// I messaggi italiani vengono dal backend (body.detail); il 429 viene
+// arricchito con il header Retry-After se presente.
+export async function parseApiError(res) {
+  const status = res.status;
+  if (status === 429) {
+    const retryAfter = res.headers.get("retry-after");
+    const message = retryAfter
+      ? `Limite di richieste NASA raggiunto. Riprova tra ${retryAfter} secondi.`
+      : "Limite di richieste NASA raggiunto. Riprova tra qualche minuto.";
+    return { message, status };
+  }
+  try {
+    const body = await res.json();
+    return { message: body.detail ?? `Errore del server (${status}).`, status };
+  } catch {
+    return { message: `Errore del server (${status}).`, status };
+  }
+}
+
 // Github icon per i link
 export const githubIcon = (
   <svg

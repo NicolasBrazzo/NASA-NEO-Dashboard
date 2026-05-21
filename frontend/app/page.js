@@ -15,31 +15,47 @@ export default async function Dashboard() {
 
   let asteroids = [];
   let fetchError = null;
+  let errorStatus = null;
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/neo/feed?start_date=${dates.startDate}&end_date=${dates.endDate}`,
       { cache: "no-store" },
     );
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    asteroids = data.asteroids ?? [];
+    if (!res.ok) {
+      errorStatus = res.status;
+      try {
+        const body = await res.json();
+        fetchError = body.detail ?? `HTTP ${res.status}`;
+      } catch {
+        fetchError = `HTTP ${res.status}`;
+      }
+    } else {
+      const data = await res.json();
+      asteroids = data.asteroids ?? [];
+    }
   } catch (err) {
     fetchError = err.message;
   }
 
   // -------- Stato di errore --------
   if (fetchError) {
+    const isRateLimit = errorStatus === 429;
     return (
       <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
-        <p className="text-eyebrow mb-6">Bollettino · Errore di connessione</p>
-        <h1>Il servizio non è raggiungibile.</h1>
-        <p className="text-lede mt-6">
-          Non sono riuscito a contattare il backend. Verifica che il server
-          FastAPI sia in esecuzione su{" "}
-          <code className="font-mono text-foreground">{process.env.NEXT_PUBLIC_API_URL?.replace('http://', '') || 'localhost:8000'}</code>,
-          oppure riprova tra qualche istante.
+        <p className="text-eyebrow mb-6">
+          Bollettino · {isRateLimit ? "Rate limit" : "Errore di connessione"}
         </p>
-        <p className="text-meta mt-8">Dettaglio tecnico · {fetchError}</p>
+        <h1>{isRateLimit ? "Limite API raggiunto." : "Il servizio non è raggiungibile."}</h1>
+        <p className="text-lede mt-6">{fetchError}</p>
+        {!isRateLimit && (
+          <p className="text-meta mt-4">
+            Verifica che il server FastAPI sia in esecuzione su{" "}
+            <code className="font-mono text-foreground">
+              {process.env.NEXT_PUBLIC_API_URL?.replace("http://", "") || "localhost:8000"}
+            </code>
+            .
+          </p>
+        )}
       </main>
     );
   }

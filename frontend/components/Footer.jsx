@@ -126,7 +126,7 @@ export const Footer = () => {
         {/* === BARRA INFERIORE === */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <p className="text-meta" style={{ margin: 0 }}>
-            © {new Date().getFullYear()} NicolasBrazzo · Progetto open source
+            © {new Date().getFullYear()} NicolasBrazzo · Progetto open source V1.0.0
           </p>
           <p className="text-meta" style={{ margin: 0 }}>
             Dati forniti da{" "}

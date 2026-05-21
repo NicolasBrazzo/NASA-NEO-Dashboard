@@ -1,7 +1,7 @@
 "use client";
 
-import { getLastWeekRange, getToday } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { getLastWeekRange, getToday, parseApiError } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ScatterChart,
@@ -13,13 +13,6 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-
-const COLORS = [
-  "oklch(0.78 0.16 65)", // ambra — primario
-  "oklch(0.65 0.12 200)", // ciano
-  "oklch(0.62 0.22 25)", // rosso
-  "oklch(0.55 0.08 240)", // blu slate
-];
 
 const CustomTooltipScatter = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
@@ -44,42 +37,56 @@ const CustomTooltipPie = ({ active, payload }) => {
   );
 };
 
-export const StatsCharts = () => {
-  const [data, setData] = useState(null);
+export const StatsCharts = ({ initialData }) => {
+  const [data, setData] = useState(initialData);
   const [dateFilter, setDateFilter] = useState(getLastWeekRange());
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [errorStatus, setErrorStatus] = useState(null);
+
+  const isFirstRender = useRef(true);
 
   const fetchAsteroidStats = async () => {
     const today = getToday();
 
-    // Validazione PRIMA di tutto
     if (dateFilter.startDate > today || dateFilter.endDate > today) {
       setError("Le date non possono essere nel futuro.");
+      setErrorStatus("validation");
       return;
     }
     if (dateFilter.startDate > dateFilter.endDate) {
       setError("La data di inizio deve essere precedente alla data di fine.");
+      setErrorStatus("validation");
       return;
     }
 
-    // Solo se tutto ok, parte il fetch
     setLoading(true);
     setError(null);
+    setErrorStatus(null);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/neo/stats?start_date=${dateFilter.startDate}&end_date=${dateFilter.endDate}`,
       );
+      if (!res.ok) {
+        const { message, status } = await parseApiError(res);
+        setError(message);
+        setErrorStatus(status);
+        return;
+      }
       const result = await res.json();
       setData(result);
     } catch {
-      setError("Errore nel caricamento delle statistiche.");
+      setError("Impossibile contattare il server. Verifica la connessione.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (dateFilter.startDate && dateFilter.endDate) {
       fetchAsteroidStats();
     }
@@ -89,7 +96,6 @@ export const StatsCharts = () => {
     (a, b) => new Date(a.date) - new Date(b.date),
   );
 
-  // KPI calcolati dai dati
   const kpis =
     data ?
       {
@@ -114,7 +120,7 @@ export const StatsCharts = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Filtri date — barra contestuale sobria */}
+      {/* Filtri date */}
       <div className="flex items-end gap-8 border-b border-border pb-6">
         <div className="flex flex-col gap-1.5">
           <span className="text-eyebrow">Dal</span>
@@ -147,9 +153,8 @@ export const StatsCharts = () => {
       </div>
 
       {/* KPI Strip */}
-      {kpis ?
+      {kpis && !error ?
         <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
-          {/* KPI 1: Totale asteroidi */}
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
             <span className="text-label">Totale asteroidi</span>
             <div className="text-data-lg">{kpis.total}</div>
@@ -158,7 +163,6 @@ export const StatsCharts = () => {
             </p>
           </article>
 
-          {/* KPI 2: Pericolosi */}
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
             <span className="text-label">Pericolosi</span>
             <div className="text-data-lg">
@@ -175,15 +179,12 @@ export const StatsCharts = () => {
             </p>
           </article>
 
-          {/* KPI 3: Asteroide più vicino */}
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
             <span className="text-label">Più vicino del periodo</span>
             {kpis.closest ?
               <>
                 <div className="text-data-lg">
-                  {Math.round(kpis.closest.distance / 1000).toLocaleString(
-                    "it-IT",
-                  )}
+                  {Math.round(kpis.closest.distance / 1000).toLocaleString("it-IT")}
                   <span className="font-mono text-sm text-muted-foreground ml-2 font-normal">
                     × 10³ km
                   </span>
@@ -196,7 +197,6 @@ export const StatsCharts = () => {
             }
           </article>
 
-          {/* KPI 4: Asteroidi grandi */}
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
             <span className="text-label">Sopra 1 km</span>
             <div className="text-data-lg">{kpis.largeCount}</div>
@@ -207,10 +207,23 @@ export const StatsCharts = () => {
         </section>
       : null}
 
-      {/* Contenuto */}
+      {/* Contenuto: errore / skeleton / grafici */}
       {error ?
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <span className="text-sm text-destructive">{error}</span>
+        <div className="border border-border bg-card px-8 py-12 flex flex-col gap-4">
+          <p className="text-eyebrow">
+            {errorStatus === 429 ? "Rate limit" : "Errore"}
+          </p>
+          <p className="text-lede">{error}</p>
+          {errorStatus !== "validation" && (
+            <button
+              onClick={fetchAsteroidStats}
+              className="w-fit font-mono text-[11px] uppercase tracking-widest
+                         border border-border px-4 py-2
+                         hover:border-foreground transition-colors"
+            >
+              Riprova →
+            </button>
+          )}
         </div>
       : loading ?
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -278,7 +291,7 @@ export const StatsCharts = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Pie — distribuzione dimensioni */}
+          {/* Bar — distribuzione dimensioni */}
           <div className="border border-border bg-card p-8 flex flex-col gap-6 flex-1">
             <div className="flex flex-col gap-2">
               <span className="text-eyebrow">Grafico 02</span>

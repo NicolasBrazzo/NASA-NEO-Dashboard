@@ -5,6 +5,7 @@ import {
   formatDistance,
   formatSpeed,
   getLastWeekRange,
+  parseApiError,
 } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -49,10 +50,15 @@ export const AsteroidsList = ({ asteroids }) => {
       if (sortBy !== null) url += `&sort_by=${sortBy}`;
 
       const response = await fetch(url);
+      if (!response.ok) {
+        const { message } = await parseApiError(response);
+        setError(message);
+        return;
+      }
       const result = await response.json();
       setData(result.asteroids);
-    } catch (err) {
-      setError("Errore nel caricamento degli asteroidi.");
+    } catch {
+      setError("Impossibile contattare il server. Verifica la connessione.");
     } finally {
       setLoading(false);
     }
