@@ -170,6 +170,7 @@ export const AsteroidsList = ({ asteroids }) => {
               <SelectItem value="none">Default</SelectItem>
               <SelectItem value="distance">Distanza</SelectItem>
               <SelectItem value="velocity">Velocità</SelectItem>
+              <SelectItem value="size">Dimensione</SelectItem>
             </SelectContent>
           </Select>
         </div>

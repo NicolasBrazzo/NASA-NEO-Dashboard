@@ -89,6 +89,16 @@ async def get_feed(
         asteroids = sorted(asteroids, key=lambda a: float(a["close_approach_data"][0]["miss_distance"]["kilometers"]))
     elif sort_by == "velocity":
         asteroids = sorted(asteroids, key=lambda a: float(a["close_approach_data"][0]["relative_velocity"]["kilometers_per_hour"]))
+    elif sort_by == "size":
+        # Ordina per diametro medio stimato (min/max), dal più grande al più piccolo
+        asteroids = sorted(
+            asteroids,
+            key=lambda a: (
+                a["estimated_diameter"]["kilometers"]["estimated_diameter_min"]
+                + a["estimated_diameter"]["kilometers"]["estimated_diameter_max"]
+            ) / 2,
+            reverse=True,
+        )
 
     return {"asteroids": asteroids}
 
