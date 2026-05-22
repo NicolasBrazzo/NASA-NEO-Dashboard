@@ -1,20 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 from routes import neo
 import os
+
+load_dotenv()
 
 # Creazione dell'app FastAPI
 app = FastAPI(title="NASA NEO Dashboard API")
 
+# Origini consentite lette da .env (ALLOWED_ORIGINS), separate da virgola.
+# Se la variabile non è settata si usano i default per lo sviluppo locale.
+_default_origins = "http://localhost:3000,https://localhost:3000"
 allowed_origins = [
-    "http://localhost:3000",
-    "https://localhost:3000",
+    origin.strip()
+    for origin in os.getenv("ALLOWED_ORIGINS", _default_origins).split(",")
+    if origin.strip()
 ]
-
-# Se è settata FRONTEND_URL come env, la aggiungiamo (sarà il dominio Vercel)
-frontend_url = os.getenv("FRONTEND_URL")
-if frontend_url:
-    allowed_origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
