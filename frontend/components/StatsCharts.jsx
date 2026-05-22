@@ -118,6 +118,10 @@ export const StatsCharts = ({ initialData }) => {
       }
     : null;
 
+  // Nessun asteroide registrato dalla NASA nel periodo selezionato.
+  const isEmpty =
+    data && data.hazardous_count + data.non_hazardous_count === 0;
+
   return (
     <div className="flex flex-col gap-6">
       {/* Filtri date */}
@@ -127,7 +131,7 @@ export const StatsCharts = ({ initialData }) => {
           <input
             type="date"
             value={dateFilter.startDate}
-            max={getToday()}
+            max={dateFilter.endDate || getToday()}
             onChange={(e) =>
               setDateFilter((prev) => ({ ...prev, startDate: e.target.value }))
             }
@@ -141,6 +145,7 @@ export const StatsCharts = ({ initialData }) => {
           <input
             type="date"
             value={dateFilter.endDate}
+            min={dateFilter.startDate || undefined}
             max={getToday()}
             onChange={(e) =>
               setDateFilter((prev) => ({ ...prev, endDate: e.target.value }))
@@ -174,6 +179,7 @@ export const StatsCharts = ({ initialData }) => {
             </article>
           ))}
         </section>
+      : isEmpty ? null
       : kpis ?
         <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
@@ -258,6 +264,17 @@ export const StatsCharts = ({ initialData }) => {
             <Skeleton className="h-4 w-40" />
             <Skeleton className="h-80 w-full" />
           </div>
+        </div>
+      : isEmpty ?
+        <div className="border border-border bg-card px-8 py-12 flex flex-col gap-4">
+          <p className="text-eyebrow">Nessun risultato</p>
+          <p className="text-lede">
+            Nessun asteroide trovato nel periodo selezionato.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            La NASA non ha registrato avvicinamenti in queste date. Prova ad
+            ampliare l&apos;intervallo o a selezionare un periodo diverso.
+          </p>
         </div>
       : <div className="flex flex-col gap-6 md:flex-row">
           {/* Scatter — distanza nel tempo */}

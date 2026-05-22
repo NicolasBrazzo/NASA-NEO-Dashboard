@@ -6,10 +6,13 @@ import {
   formatDistance,
   formatSpeed,
   getLastWeekRange,
+  getToday,
   parseApiError,
 } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -43,6 +46,21 @@ export const AsteroidsList = ({ asteroids }) => {
   const isFirstRender = useRef(true);
 
   const fetchAsteroids = async () => {
+    const today = getToday();
+
+    if (!dateFilter.startDate || !dateFilter.endDate) {
+      setError("Seleziona entrambe le date.");
+      return;
+    }
+    if (dateFilter.startDate > today || dateFilter.endDate > today) {
+      setError("Le date non possono essere nel futuro.");
+      return;
+    }
+    if (dateFilter.startDate > dateFilter.endDate) {
+      setError("La data di inizio deve essere precedente alla data di fine.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -71,10 +89,10 @@ export const AsteroidsList = ({ asteroids }) => {
       isFirstRender.current = false;
       return;
     }
-    if (dateFilter.startDate && dateFilter.endDate) {
-      fetchAsteroids();
-    }
-  }, [isHazardous, sortBy, dateFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Solo pericolosità e ordinamento fanno fetch automatico.
+    // Le date partono esclusivamente dal bottone "Cerca".
+    fetchAsteroids();
+  }, [isHazardous, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col gap-8">
@@ -86,6 +104,7 @@ export const AsteroidsList = ({ asteroids }) => {
           <input
             type="date"
             value={dateFilter.startDate}
+            max={getToday()}
             onChange={(e) =>
               setDateFilter((prev) => ({ ...prev, startDate: e.target.value }))
             }
@@ -99,6 +118,7 @@ export const AsteroidsList = ({ asteroids }) => {
           <input
             type="date"
             value={dateFilter.endDate}
+            max={getToday()}
             onChange={(e) =>
               setDateFilter((prev) => ({ ...prev, endDate: e.target.value }))
             }
@@ -107,6 +127,14 @@ export const AsteroidsList = ({ asteroids }) => {
                        focus:border-foreground transition-colors"
           />
         </div>
+        <Button
+          variant="outline"
+          className="h-8 cursor-pointer"
+          onClick={fetchAsteroids}
+        >
+          <Search />
+          Cerca
+        </Button>
 
         {/* Pericolosità */}
         <div className="flex flex-col gap-1.5">
