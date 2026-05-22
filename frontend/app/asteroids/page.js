@@ -1,7 +1,15 @@
 import { AsteroidsList } from "@/components/AsteroidsList";
 import { getLastWeekRange } from "@/lib/utils";
+import { pageMetadata } from "@/lib/seo";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export const metadata = pageMetadata({
+  title: "Esplora asteroidi",
+  description:
+    "Il catalogo completo dei Near-Earth Objects che hanno attraversato il vicinato della Terra: orbita, dimensioni e tutti gli avvicinamenti registrati dalla NASA.",
+  path: "/asteroids",
+});
 
 export default async function Asteroids() {
   const dates = getLastWeekRange();

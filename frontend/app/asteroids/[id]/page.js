@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ApproachRadar } from "@/components/ApproachRadar";
+import { pageMetadata } from "@/lib/seo";
 
 
 // =============================================================================
@@ -79,6 +80,53 @@ function buildLede(data) {
   }
 
   return lede;
+}
+
+// =============================================================================
+// METADATA
+// Titolo e descrizione dinamici, derivati dai dati dell'asteroide.
+// La fetch identica a quella della pagina viene deduplicata da Next.js.
+// =============================================================================
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/neo/${id}`, {
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      return pageMetadata({
+        title: "Asteroide non trovato",
+        description:
+          "L'identificativo richiesto non corrisponde a nessun oggetto nel database NASA NeoWs.",
+        path: `/asteroids/${id}`,
+        ogType: "article",
+      });
+    }
+
+    const data = await res.json();
+    const name = cleanName(data.name);
+    const description = `Dati orbitali, dimensioni stimate e avvicinamenti alla Terra dell'asteroide ${name}${
+      data.is_potentially_hazardous_asteroid ?
+        ", classificato come potenzialmente pericoloso dalla NASA"
+      : ""
+    }.`;
+
+    return pageMetadata({
+      title: name,
+      description,
+      path: `/asteroids/${id}`,
+      ogType: "article",
+    });
+  } catch {
+    return pageMetadata({
+      title: "Dettaglio asteroide",
+      description:
+        "Scheda dettagliata di un oggetto vicino alla Terra tracciato dalla NASA.",
+      path: `/asteroids/${id}`,
+      ogType: "article",
+    });
+  }
 }
 
 // =============================================================================

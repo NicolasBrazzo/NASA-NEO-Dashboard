@@ -9,6 +9,15 @@ import {
   LUNAR_DISTANCE_KM
 } from "@/lib/utils";
 import { AsteroidRadar } from "@/components/AsteroidRadar";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "NASA NEO Dashboard — Asteroidi vicini alla Terra",
+  description:
+    "Il bollettino settimanale degli asteroidi che sfiorano la Terra: oggetti tracciati, avvicinamento più ravvicinato e oggetto più grande in transito, con dati ufficiali NASA NeoWs.",
+  path: "/",
+  absoluteTitle: true,
+});
 
 export default async function Dashboard() {
   const dates = getLastWeekRange();

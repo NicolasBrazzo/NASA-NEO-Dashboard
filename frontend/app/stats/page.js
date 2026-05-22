@@ -1,5 +1,13 @@
 import { StatsCharts } from "@/components/StatsCharts";
 import { getLastWeekRange } from "@/lib/utils";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Statistiche",
+  description:
+    "Dati aggregati sui Near-Earth Objects: distribuzione degli avvicinamenti nello spazio e delle dimensioni degli asteroidi, dai più piccoli ai più grandi.",
+  path: "/stats",
+});
 
 export default async function Stats() {
   const dates = getLastWeekRange();

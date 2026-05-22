@@ -1,7 +1,7 @@
 "use client";
 
 import { getLastWeekRange, getToday, parseApiError } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ScatterChart,
@@ -13,6 +13,8 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+import { Button } from "./ui/button";
+import { Search } from "lucide-react";
 
 const CustomTooltipScatter = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
@@ -44,11 +46,14 @@ export const StatsCharts = ({ initialData }) => {
   const [error, setError] = useState(null);
   const [errorStatus, setErrorStatus] = useState(null);
 
-  const isFirstRender = useRef(true);
-
   const fetchAsteroidStats = async () => {
     const today = getToday();
 
+    if (!dateFilter.startDate || !dateFilter.endDate) {
+      setError("Seleziona entrambe le date.");
+      setErrorStatus("validation");
+      return;
+    }
     if (dateFilter.startDate > today || dateFilter.endDate > today) {
       setError("Le date non possono essere nel futuro.");
       setErrorStatus("validation");
@@ -81,16 +86,6 @@ export const StatsCharts = ({ initialData }) => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    if (dateFilter.startDate && dateFilter.endDate) {
-      fetchAsteroidStats();
-    }
-  }, [dateFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sortedData = [...(data?.distance_over_time || [])].sort(
     (a, b) => new Date(a.date) - new Date(b.date),
@@ -150,10 +145,31 @@ export const StatsCharts = ({ initialData }) => {
                  focus:border-foreground transition-colors"
           />
         </div>
+        <Button variant="outline" className="h-8 cursor-pointer" onClick={fetchAsteroidStats}>
+          <Search />
+          Cerca
+        </Button>
       </div>
 
       {/* KPI Strip */}
-      {kpis && !error ?
+      {error ? null
+      : loading ?
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <article
+              key={i}
+              className="bg-card px-6 py-6 flex flex-col gap-2"
+            >
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-14 w-28" />
+              <div className="flex flex-col gap-1.5">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
+            </article>
+          ))}
+        </section>
+      : kpis ?
         <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
           <article className="bg-card px-6 py-6 flex flex-col gap-2">
             <span className="text-label">Totale asteroidi</span>
@@ -184,7 +200,9 @@ export const StatsCharts = ({ initialData }) => {
             {kpis.closest ?
               <>
                 <div className="text-data-lg">
-                  {Math.round(kpis.closest.distance / 1000).toLocaleString("it-IT")}
+                  {Math.round(kpis.closest.distance / 1000).toLocaleString(
+                    "it-IT",
+                  )}
                   <span className="font-mono text-sm text-muted-foreground ml-2 font-normal">
                     × 10³ km
                   </span>
