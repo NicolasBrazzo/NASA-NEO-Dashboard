@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { formatDiameter, formatDistance, formatSpeed } from "@/lib/utils";
+import {
+  formatDateIt,
+  formatDiameter,
+  formatDistance,
+  formatSpeed,
+} from "@/lib/utils";
 
 export const AsteroidsCardDashboard = ({ asteroid }) => {
   const approach = asteroid.close_approach_data[0];
@@ -30,7 +35,9 @@ export const AsteroidsCardDashboard = ({ asteroid }) => {
         <div className="flex flex-col gap-2.5">
           <div className="flex flex-col gap-0.5">
             <span className="text-label">Data avvicinamento</span>
-            <span className="text-data">{approach?.close_approach_date}</span>
+            <span className="text-data">
+              {formatDateIt(approach?.close_approach_date)}
+            </span>
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="text-label">Distanza</span>

@@ -1,6 +1,11 @@
 "use client";
 
-import { getLastWeekRange, getToday, parseApiError } from "@/lib/utils";
+import {
+  formatDateIt,
+  getLastWeekRange,
+  getToday,
+  parseApiError,
+} from "@/lib/utils";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -21,7 +26,7 @@ const CustomTooltipScatter = ({ active, payload }) => {
   const d = payload[0]?.payload;
   return (
     <div className="rounded-md border border-border bg-card px-3 py-2 flex flex-col gap-1">
-      <span className="text-label">{d?.date}</span>
+      <span className="text-label">{formatDateIt(d?.date)}</span>
       <span className="text-data">
         {(d?.distance / 1_000_000).toFixed(2)} M km
       </span>
@@ -208,7 +213,7 @@ export const StatsCharts = ({ initialData }) => {
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-snug font-mono">
-                  {kpis.closest.date}
+                  {formatDateIt(kpis.closest.date)}
                 </p>
               </>
             : <span className="text-sm text-muted-foreground">Nessun dato</span>
@@ -271,10 +276,11 @@ export const StatsCharts = ({ initialData }) => {
                   type="category"
                   dataKey="date"
                   name="Data"
+                  tickFormatter={formatDateIt}
                   tick={{
                     fontSize: 11,
                     fill: "oklch(0.52 0.008 240)",
-                    fontFamily: "var(--font-geist-mono)",
+                    fontFamily: "var(--font-mono)",
                   }}
                   tickLine={false}
                   axisLine={{ stroke: "oklch(1 0 0 / 8%)" }}
@@ -286,7 +292,7 @@ export const StatsCharts = ({ initialData }) => {
                   tick={{
                     fontSize: 11,
                     fill: "oklch(0.52 0.008 240)",
-                    fontFamily: "var(--font-geist-mono)",
+                    fontFamily: "var(--font-mono)",
                   }}
                   tickLine={false}
                   axisLine={false}
@@ -330,7 +336,7 @@ export const StatsCharts = ({ initialData }) => {
                   tick={{
                     fontSize: 11,
                     fill: "oklch(0.52 0.008 240)",
-                    fontFamily: "var(--font-geist-mono)",
+                    fontFamily: "var(--font-mono)",
                   }}
                   tickLine={false}
                   axisLine={{ stroke: "oklch(1 0 0 / 8%)" }}
@@ -341,7 +347,7 @@ export const StatsCharts = ({ initialData }) => {
                   tick={{
                     fontSize: 11,
                     fill: "oklch(0.52 0.008 240)",
-                    fontFamily: "var(--font-geist-mono)",
+                    fontFamily: "var(--font-mono)",
                   }}
                   tickLine={false}
                   axisLine={false}

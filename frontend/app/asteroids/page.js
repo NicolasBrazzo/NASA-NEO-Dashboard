@@ -30,7 +30,7 @@ export default async function Asteroids() {
 
   if (fetchError) {
     return (
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
+      <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-16">
         <p className="text-eyebrow mb-6">Errore di connessione</p>
         <h1>Non riesco a recuperare gli asteroidi.</h1>
         <p className="text-lede mt-6">
@@ -43,7 +43,7 @@ export default async function Asteroids() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
+    <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       <div className="flex flex-col gap-3">
         <p className="text-eyebrow">Catalogo · Near-Earth Objects</p>
         <h1>Esplora asteroidi</h1>

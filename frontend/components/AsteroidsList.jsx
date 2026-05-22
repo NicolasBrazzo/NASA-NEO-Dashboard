@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  formatDateIt,
   formatDiameter,
   formatDistance,
   formatSpeed,
@@ -235,7 +236,7 @@ export const AsteroidsList = ({ asteroids }) => {
                     </TableCell>
                     <TableCell>
                       <span className="text-data">
-                        {approach?.close_approach_date}
+                        {formatDateIt(approach?.close_approach_date)}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">

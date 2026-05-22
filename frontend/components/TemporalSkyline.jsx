@@ -206,7 +206,7 @@ export function TemporalSkyline({ asteroids, startDate, endDate }) {
           textAnchor="end"
           className="fill-muted-foreground"
           style={{
-            fontFamily: "var(--font-geist-mono)",
+            fontFamily: "var(--font-mono)",
             fontSize: 10,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
@@ -269,7 +269,7 @@ export function TemporalSkyline({ asteroids, startDate, endDate }) {
                     textAnchor="middle"
                     className="fill-foreground"
                     style={{
-                      fontFamily: "var(--font-geist-mono)",
+                      fontFamily: "var(--font-mono)",
                       fontSize: 11,
                       fontWeight: 500,
                     }}
@@ -282,7 +282,7 @@ export function TemporalSkyline({ asteroids, startDate, endDate }) {
                     textAnchor="middle"
                     className="fill-muted-foreground"
                     style={{
-                      fontFamily: "var(--font-geist-mono)",
+                      fontFamily: "var(--font-mono)",
                       fontSize: 9,
                       letterSpacing: "0.05em",
                     }}
@@ -304,7 +304,7 @@ export function TemporalSkyline({ asteroids, startDate, endDate }) {
               textAnchor="middle"
               className="fill-foreground"
               style={{
-                fontFamily: "var(--font-geist-mono)",
+                fontFamily: "var(--font-mono)",
                 fontSize: 12,
                 fontWeight: 500,
               }}
@@ -317,7 +317,7 @@ export function TemporalSkyline({ asteroids, startDate, endDate }) {
               textAnchor="middle"
               className="fill-muted-foreground"
               style={{
-                fontFamily: "var(--font-geist-mono)",
+                fontFamily: "var(--font-mono)",
                 fontSize: 9,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",

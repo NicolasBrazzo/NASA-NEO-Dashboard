@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { Geist, IBM_Plex_Mono, Fraunces, Bricolage_Grotesque } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
@@ -9,9 +9,13 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Font monospace: IBM Plex Mono — heritage ingegneristico, porta l'identità
+// "strumento di misura" su dati, numeri tabellari, eyebrow e meta-testo.
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 const fraunces = Fraunces({
@@ -19,6 +23,15 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
   style: ["normal", "italic"],
+  display: "swap",
+});
+
+// Font dei titoli: grottesco contemporaneo con optical sizing (asse opsz),
+// così resta nitido sia nei titoloni hero che nelle dimensioni più piccole.
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-display",
+  subsets: ["latin"],
+  axes: ["opsz"],
   display: "swap",
 });
 
@@ -66,7 +79,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="it"
-      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${plexMono.variable} ${fraunces.variable} ${bricolage.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col">
         <Navbar />

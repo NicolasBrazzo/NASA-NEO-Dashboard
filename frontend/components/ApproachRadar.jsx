@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { formatDateIt } from "@/lib/utils";
 
 // =============================================================================
 // ApproachRadar
@@ -327,7 +328,7 @@ export const ApproachRadar = ({ approaches }) => {
                 fill="var(--primary)"
                 opacity={0.9}
               >
-                NEXT · {a.date}
+                NEXT · {formatDateIt(a.date)}
               </text>
             </g>
           ))}

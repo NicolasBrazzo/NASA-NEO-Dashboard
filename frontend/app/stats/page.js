@@ -39,7 +39,7 @@ export default async function Stats() {
   if (fetchError) {
     const isRateLimit = errorStatus === 429;
     return (
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
+      <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-16">
         <p className="text-eyebrow mb-6">
           Statistiche · {isRateLimit ? "Rate limit" : "Errore di connessione"}
         </p>
@@ -54,7 +54,7 @@ export default async function Stats() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
+    <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       <div className="flex flex-col gap-3">
         <p className="text-eyebrow">DATI AGGREGATI · NEAR-EARTH OBJECTS</p>
         <h1>Statistiche</h1>

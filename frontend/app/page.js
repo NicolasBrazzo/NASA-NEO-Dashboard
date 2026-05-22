@@ -50,7 +50,7 @@ export default async function Dashboard() {
   if (fetchError) {
     const isRateLimit = errorStatus === 429;
     return (
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
+      <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-16">
         <p className="text-eyebrow mb-6">
           Bollettino · {isRateLimit ? "Rate limit" : "Errore di connessione"}
         </p>
@@ -72,7 +72,7 @@ export default async function Dashboard() {
   // -------- Stato vuoto --------
   if (asteroids.length === 0) {
     return (
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
+      <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-16">
         <p className="text-eyebrow mb-6">
           Bollettino · {formatDateRange(dates.startDate, dates.endDate)}
         </p>
@@ -112,7 +112,7 @@ export default async function Dashboard() {
   const largestSize = compareSize(largestDiameterMeters, largest.id);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
+    <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       {/* ===== HERO ===== */}
       <section className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-start">
         <div className="flex flex-col gap-8">

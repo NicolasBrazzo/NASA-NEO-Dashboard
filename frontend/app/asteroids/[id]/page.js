@@ -4,6 +4,7 @@ import {
   formatDistance,
   formatSpeed,
   formatDateLong,
+  formatDateIt,
   LUNAR_DISTANCE_KM,
 } from "@/lib/utils";
 import {
@@ -161,7 +162,7 @@ export default async function AsteroidDetail({ params }) {
   // -------- Stato 404 --------
   if (errorStatus === 404) {
     return (
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
+      <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-16">
         <Link
           href="/asteroids"
           className="text-eyebrow no-underline hover:text-foreground transition-colors mb-12 block w-fit"
@@ -184,7 +185,7 @@ export default async function AsteroidDetail({ params }) {
   if (fetchError) {
     const isRateLimit = errorStatus === 429;
     return (
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-16">
+      <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-16">
         <Link
           href="/asteroids"
           className="text-eyebrow no-underline hover:text-foreground transition-colors mb-12 block w-fit"
@@ -237,7 +238,7 @@ export default async function AsteroidDetail({ params }) {
   const periodYears = (parseFloat(orbital.orbital_period) / 365.25).toFixed(2);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
+    <main className="mx-auto w-full max-w-7xl px-4 sm:px-8 py-10 sm:py-16 flex flex-col gap-12 md:gap-20">
       {/* ===== BREADCRUMB ===== */}
       <Link
         href="/asteroids"
@@ -334,7 +335,7 @@ export default async function AsteroidDetail({ params }) {
                 </span>
                 {" · "}
                 <span className="text-meta">
-                  {closestEarth.close_approach_date}
+                  {formatDateIt(closestEarth.close_approach_date)}
                 </span>
               </p>
             </>
@@ -561,7 +562,7 @@ export default async function AsteroidDetail({ params }) {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <span className="text-data">
-                            {approach.close_approach_date}
+                            {formatDateIt(approach.close_approach_date)}
                           </span>
                           {isClosest && (
                             <span className="font-mono text-[9px] uppercase tracking-widest text-primary border border-primary/40 px-1.5 py-0.5 rounded-xs">

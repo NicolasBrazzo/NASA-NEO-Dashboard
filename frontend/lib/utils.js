@@ -61,6 +61,19 @@ export const lunarDistanceLabel = (km) => {
 // FORMATTAZIONE DATE
 // -----------------------------------------------------------------------------
 
+// Converte una data dal formato americano/ISO (YYYY-MM-DD) al formato
+// italiano (DD-MM-YYYY). Lavora sulla stringa per evitare problemi di
+// fuso orario; eventuale parte oraria (es. "...T12:00") viene ignorata.
+// "2026-05-12" → "12-05-2026"
+// Se l'input non corrisponde al formato atteso viene restituito invariato.
+export const formatDateIt = (iso) => {
+  if (typeof iso !== "string") return iso ?? "";
+  const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return iso;
+  const [, year, month, day] = match;
+  return `${day}-${month}-${year}`;
+};
+
 // Range tra due date ISO → stringa italiana editoriale
 // "2026-05-05" + "2026-05-12" → "5 — 12 maggio 2026"
 // Se i mesi differiscono → "30 aprile — 6 maggio 2026"
