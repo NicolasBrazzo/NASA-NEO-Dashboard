@@ -17,22 +17,22 @@ Backend live: https://nasa-neo-dashboard-production-d4ca.up.railway.app/
 
 ---
 
-## Funzionalita principali
+## Funzionalità principali
 
-- **Dashboard settimanale** (`/`): riepilogo degli asteroidi dell'ultima settimana, 3 KPI principali (totale, pericolosi, piu vicino) e radar visuale che posiziona ogni asteroide in scala logaritmica rispetto alla distanza Terra-Luna.
-- **Lista asteroidi** (`/asteroids`): tabella completa con filtri per data, pericolosita e ordinamento per distanza, velocita o dimensione.
+- **Dashboard settimanale** (`/`): riepilogo degli asteroidi dell'ultima settimana, 3 KPI principali (totale, pericolosi, più vicino) e radar visuale che posiziona ogni asteroide in scala logaritmica rispetto alla distanza Terra-Luna.
+- **Lista asteroidi** (`/asteroids`): tabella completa con filtri per data, pericolosità e ordinamento per distanza, velocità o dimensione.
 - **Dettaglio asteroide** (`/asteroids/[id]`): dati orbitali, diametro stimato con comparatori di dimensione contestuali, radar storico degli avvicinamenti e tabella dei close approach.
-- **Statistiche** (`/stats`): grafici aggregati su periodi configurabili — scatter della distanza nel tempo e distribuzione per fascia di diametro — con KPI calcolati lato client (totale, pericolosi, piu vicino, asteroidi sopra 1 km).
+- **Statistiche** (`/stats`): grafici aggregati su periodi configurabili — scatter della distanza nel tempo e distribuzione per fascia di diametro — con KPI calcolati lato client (totale, pericolosi, più vicino, asteroidi sopra 1 km).
 
 ---
 
 ## Architettura
 
-Il backend fa da proxy verso NASA: il frontend non chiama mai direttamente l'API NASA, e la chiave API non e mai esposta al client.
+Il backend fa da proxy verso NASA: il frontend non chiama mai direttamente l'API NASA, e la chiave API non è mai esposta al client.
 
-La NASA NeoWs API accetta al massimo 7 giorni per singola richiesta. Per range piu ampi, il backend spezza automaticamente l'intervallo in chunk da 7 giorni, li fetcha in sequenza e unisce i risultati. Gli asteroidi che compaiono in piu chunk (perche hanno avvicinamenti in giorni diversi) vengono deduplicati per ID prima di essere restituiti.
+La NASA NeoWs API accetta al massimo 7 giorni per singola richiesta. Per range più ampi, il backend spezza automaticamente l'intervallo in chunk da 7 giorni, li fetcha in sequenza e unisce i risultati. Gli asteroidi che compaiono in più chunk (perché hanno avvicinamenti in giorni diversi) vengono deduplicati per ID prima di essere restituiti.
 
-Il caching e in-memory: un dizionario Python (`cache = {}`) con chiave `"{start_date}_{end_date}"` per il feed e `"neo_{neo_id}"` per i dettagli singoli. Ogni voce ha un TTL di 1 ora (`CACHE_TTL = 3600`): la scadenza viene controllata prima di servire il dato e le voci scadute vengono rimosse. Se lo stesso range di date viene richiesto due volte entro un'ora, NASA non viene chiamata la seconda volta. La cache si svuota comunque a ogni restart del processo.
+Il caching è in-memory: un dizionario Python (`cache = {}`) con chiave `"{start_date}_{end_date}"` per il feed e `"neo_{neo_id}"` per i dettagli singoli. Ogni voce ha un TTL di 1 ora (`CACHE_TTL = 3600`): la scadenza viene controllata prima di servire il dato e le voci scadute vengono rimosse. Se lo stesso range di date viene richiesto due volte entro un'ora, NASA non viene chiamata la seconda volta. La cache si svuota comunque a ogni restart del processo.
 
 Gli errori verso la NASA sono gestiti esplicitamente in `services/nasa.py`: timeout e problemi di rete diventano `503`, il rate limit NASA (`429`) viene propagato al client come `429` con header `Retry-After`, e un ID inesistente restituisce `404`. Il frontend legge questi status code e mostra messaggi dedicati invece di un errore generico.
 
@@ -44,14 +44,14 @@ Gli errori verso la NASA sono gestiti esplicitamente in `services/nasa.py`: time
 GET /neo/feed
   ?start_date=YYYY-MM-DD    (obbligatorio)
   ?end_date=YYYY-MM-DD      (obbligatorio)
-  ?is_hazardous=true|false  (opzionale — filtra per pericolosita)
+  ?is_hazardous=true|false  (opzionale — filtra per pericolosità)
   ?sort_by=distance|velocity|size (opzionale — default: distance)
 
   → { "asteroids": [...] }
     Lista deduplicata e ordinata degli asteroidi nel periodo.
     Ogni oggetto contiene i campi NASA originali (close_approach_data,
     estimated_diameter, is_potentially_hazardous_asteroid, ecc.).
-    sort_by=size ordina dal diametro stimato piu grande al piu piccolo.
+    sort_by=size ordina dal diametro stimato più grande al più piccolo.
 
 
 GET /neo/stats
@@ -76,7 +76,7 @@ GET /neo/{neo_id}
     e l'intero storico close_approach_data.
 ```
 
-Tutti gli endpoint validano `start_date` ed `end_date` (formato `YYYY-MM-DD`, date reali, `start_date <= end_date`, range massimo 90 giorni) e restituiscono `422` su input non valido. La documentazione interattiva auto-generata da FastAPI e disponibile su `/docs`.
+Tutti gli endpoint validano `start_date` ed `end_date` (formato `YYYY-MM-DD`, date reali, `start_date <= end_date`, range massimo 90 giorni) e restituiscono `422` su input non valido. La documentazione interattiva auto-generata da FastAPI è disponibile su `/docs`.
 
 ---
 
@@ -186,13 +186,13 @@ Il frontend risponde su `http://localhost:3000`.
 
 ## Scelte di design e architettura
 
-**Backend Python + frontend Next.js separati.** La traccia lo richiede, ma la separazione porta benefici concreti: la chiave NASA non e mai nel bundle del client, il backend puo aggregare e cachare dati che il frontend userebbe in piu richieste separate, e il chunking delle date e trasparente per il client.
+**Backend Python + frontend Next.js separati.** La traccia lo richiede, ma la separazione porta benefici concreti: la chiave NASA non è mai nel bundle del client, il backend può aggregare e cachare dati che il frontend userebbe in più richieste separate, e il chunking delle date è trasparente per il client.
 
-**Cache in-memory con TTL.** Un dizionario Python con scadenza per voce, fissata a 1 ora. E efficace per ridurre le chiamate a NASA — fondamentale dato il rate limit severo dell'API — e il TTL evita di servire dati troppo vecchi. La cache si svuota comunque a ogni restart del processo: una soluzione persistente come Redis sarebbe piu robusta, ma introduce complessita non giustificata per una challenge.
+**Cache in-memory con TTL.** Un dizionario Python con scadenza per voce, fissata a 1 ora. È efficace per ridurre le chiamate a NASA — fondamentale dato il rate limit severo dell'API — e il TTL evita di servire dati troppo vecchi. La cache si svuota comunque a ogni restart del processo: una soluzione persistente come Redis sarebbe più robusta, ma introduce complessità non giustificata per una challenge.
 
 **Chunking trasparente delle date.** La funzione `fetch_feed_range()` in `services/nasa.py` spezza qualsiasi intervallo in chunk da 7 giorni, li fetcha in sequenza e unisce i `near_earth_objects` con `dict.update()`. La deduplica per ID avviene nel router, non nel service, per mantenere il service responsabile solo del fetch.
 
-**Radar SVG custom invece di Recharts.** I componenti `AsteroidRadar` e `ApproachRadar` sono SVG puri con animazioni CSS (sweep 10s lineare, approach-pulse 2s, glow gaussiano). Il look HUD non era ottenibile con Recharts senza compromessi visivi. `AsteroidRadar` usa scala logaritmica per la distanza (asteroidi a 1 LD occupano piu spazio di quelli a 40 LD) e distribuzione a golden angle (137.5 gradi) per evitare sovrapposizioni. `ApproachRadar` usa scala lineare perche il range storico di un singolo asteroide e piu compresso.
+**Radar SVG custom invece di Recharts.** I componenti `AsteroidRadar` e `ApproachRadar` sono SVG puri con animazioni CSS (sweep 10s lineare, approach-pulse 2s, glow gaussiano). Il look HUD non era ottenibile con Recharts senza compromessi visivi. `AsteroidRadar` usa scala logaritmica per la distanza (asteroidi a 1 LD occupano più spazio di quelli a 40 LD) e distribuzione a golden angle (137.5 gradi) per evitare sovrapposizioni. `ApproachRadar` usa scala lineare perché il range storico di un singolo asteroide è più compresso.
 
 **Stile editoriale.** Titoli in `Bricolage Grotesque` (grottesco contemporaneo con optical sizing), corsivi enfatici in `Fraunces` (serif), dati e label in `IBM Plex Mono`, testo corrente in `Geist`; palette dark con `oklch(0.78 0.16 65)` (ambra) come accento primario. I componenti shadcn sono usati come base strutturale ma le classi Tailwind sovrascrivono quasi tutto lo stile di default per coerenza con il language system.
 
@@ -201,8 +201,8 @@ Il frontend risponde su `http://localhost:3000`.
 ## Limitazioni note
 
 - **Cold start Railway**: il backend in free tier va in sleep dopo inattività. La prima richiesta dopo il sleep impiega ~30 secondi. Tutte le richieste successive sono normali.
-- **Cache in-memory**: si svuota a ogni restart del processo. Su Railway il backend si riavvia spesso (sleep/wake), quindi la cache e meno efficace in produzione tra sessioni distanti nel tempo.
-- **Nessun test automatico**: ne unit ne integration test. La correttezza dipende da test manuali.
+- **Cache in-memory**: si svuota a ogni restart del processo. Su Railway il backend si riavvia spesso (sleep/wake), quindi la cache è meno efficace in produzione tra sessioni distanti nel tempo.
+- **Nessun test automatico**: né unit né integration test. La correttezza dipende da test manuali.
 
 ---
 
